@@ -5,15 +5,25 @@
     <title>Prospect Park Conditions</title>
 </head>
 <body>
-    <h1>Prospect Park Conditions</h1>
-    <input id="id_new_date_time" placeholder="Enter the date and time of the report"/>
-    <input id="id_new_road_condition" placeholder="Enter a road condition for the report"/>
-    <input id="id_new_weather_report" placeholder="Enter the weather with the report"/>
-    <input id="id_new_crowds_report" placeholder="Enter the crowd condition with the report"/>
-    <input id="id_new_report_notes" placeholder="Enter any notes with the report"/>
+<h1>Prospect Park Conditions</h1>
 
-    <table id="id_condition_report_table">
+<form method="POST">
+    <input name="new_date_time" id="id_new_date_time" placeholder="Enter the date and time of the report"/>
+    <input name="new_road_condition" id="id_new_road_condition" placeholder="Enter a road condition for the report"/>
+    <input name="new_weather_report" id="id_new_weather_report" placeholder="Enter the weather with the report"/>
+    <input name="new_crowds_report" id="id_new_crowds_report" placeholder="Enter the crowd condition with the report"/>
+    <input name="new_report_notes" id="id_new_report_notes" placeholder="Enter any notes with the report"/>
 
-    </table>
+    <input id="id_submit_button" type="submit" value="Submit" />
+
+    {% csrf_token %}
+</form>
+<table id="id_condition_report_table">
+    <tr><td>{{ new_date_time_text }}</td></tr>
+    <tr><td>{{ new_road_condition_text }}</td></tr>
+    <tr><td>{{ new_weather_report_text }}</td></tr>
+    <tr><td>{{ new_crowds_report_text }}</td></tr>
+    <tr><td>{{ new_report_notes_text }}</td></tr>
+</table>
 </body>
 </html>
