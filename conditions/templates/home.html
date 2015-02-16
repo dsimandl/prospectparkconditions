@@ -19,11 +19,14 @@
     {% csrf_token %}
 </form>
 <table id="id_condition_report_table">
-    <tr><td>{{ new_date_time_text }}</td></tr>
-    <tr><td>{{ new_road_condition_text }}</td></tr>
-    <tr><td>{{ new_weather_report_text }}</td></tr>
-    <tr><td>{{ new_crowds_report_text }}</td></tr>
-    <tr><td>{{ new_report_notes_text }}</td></tr>
+    {% for report in reports %}
+        <tr><td>{{ report.date_time }}</td></tr>
+        <tr><td>{{ report.road_condition }}</td></tr>
+        <tr><td>{{ report.weather_report }}</td></tr>
+        <tr><td>{{ report.crowds_report }}</td></tr>
+        <tr><td>{{ report.report_notes }}</td></tr>
+        <tr><td>----------------------------------------------------</td></tr>
+    {% endfor %}
 </table>
 </body>
 </html>

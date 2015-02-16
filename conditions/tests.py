@@ -28,18 +28,48 @@ class HomePageTest(TestCase):
         request.POST['new_report_notes'] = 'Blah Blah'
 
         response = home_page(request)
-        self.assertIn('01/01/2014 3:00PM', response.content.decode())
-        self.assertIn('Great', response.content.decode())
-        self.assertIn('Awesome', response.content.decode())
-        self.assertIn('Terrible', response.content.decode())
-        self.assertIn('Blah Blah', response.content.decode())
-        expected_html = render_to_string('home.html', {'new_date_time_text': '01/01/2014 3:00PM',
-                                                       'new_road_condition_text': 'Great',
-                                                       'new_weather_report_text': 'Awesome',
-                                                       'new_crowds_report_text': 'Terrible',
-                                                       'new_report_notes_text': 'Blah Blah'})
-        self.assertEqual(response.content.decode(), expected_html)
 
+        self.assertEqual(ConditionReport.objects.count(), 1)
+        new_object = ConditionReport.objects.first()
+        self.assertEqual(new_object.date_time, '01/01/2014 3:00PM')
+        self.assertEqual(new_object.road_condition, 'Great')
+        self.assertEqual(new_object.weather_report, 'Awesome')
+        self.assertEqual(new_object.crowds_report, 'Terrible')
+        self.assertEqual(new_object.report_notes, 'Blah Blah')
+
+    def test_home_page_redirects_after_POST(self):
+
+        request = HttpRequest()
+        request.method = 'POST'
+        request.POST['new_date_time'] = '01/01/2014 3:00PM'
+        request.POST['new_road_condition'] = 'Great'
+        request.POST['new_weather_report'] = 'Awesome'
+        request.POST['new_crowds_report'] = 'Terrible'
+        request.POST['new_report_notes'] = 'Blah Blah'
+
+        response = home_page(request)
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response['location'], '/')
+
+    def test_home_page_displays_all_list_items(self):
+        ConditionReport.objects.create(date_time='01/01/2014 3:00PM',
+                                       road_condition='Great',
+                                       weather_report='Awesome',
+                                       crowds_report='Terrible',
+                                       report_notes='Blah Blah')
+
+        ConditionReport.objects.create(date_time='01/02/2014 3:00PM',
+                                       road_condition='Ok',
+                                       weather_report='Cold!',
+                                       crowds_report='Noone',
+                                       report_notes='HeHe')
+
+        request = HttpRequest()
+        response = home_page(request)
+
+        self.assertIn('01/01/2014 3:00PM', response.content.decode())
+        self.assertIn('01/02/2014 3:00PM', response.content.decode())
 
 class ConditionReportModelTest(TestCase):
 
@@ -77,3 +107,8 @@ class ConditionReportModelTest(TestCase):
         self.assertEqual(second_saved_report.weather_report, 'Cold')
         self.assertEqual(second_saved_report.crowds_report, 'Great')
         self.assertEqual(second_saved_report.report_notes, 'Empty!')
+
+    def test_home_page_only_saves_reports_when_necessary(self):
+        request = HttpRequest()
+        home_page(request)
+        self.assertEqual(ConditionReport.objects.count(), 0)
