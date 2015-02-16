@@ -85,8 +85,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.send_keys(crowds_input, 'Very crowded! Lots of pedestrians and bikes!')
         # She types in other notes that she has for the report (Be aware there is a celebrate brooklyn show tonight!
         #   The park drives are full of pedestrians and bikes, especially by the bandshell)
-        self.send_keys(notes_input, 'Be aware there is a celebrate brooklyn show tonight!  '
-                              'The park drives are full of pedestrians and bikes, especially by the bandshell')
+        self.send_keys(notes_input, 'Be aware there is a celebrate brooklyn show tonight! The park drives are full of pedestrians and bikes, especially by the bandshell')
 
         # When she hits enter there are two condition reports listed.
         submit_button.send_keys(Keys.ENTER)
@@ -101,8 +100,7 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_list_table('The road is slick and sloppy from the rain early this afternoon')
         self.check_for_row_in_list_table('Muggy, warm, and sunny')
         self.check_for_row_in_list_table('Very crowded! Lots of pedestrians and bikes!')
-        self.check_for_row_in_list_table('Be aware there is a celebrate brooklyn show tonight!  '
-                              'The park drives are full of pedestrians and bikes, especially by the bandshell')
+        self.check_for_row_in_list_table('Be aware there is a celebrate brooklyn show tonight! The park drives are full of pedestrians and bikes, especially by the bandshell')
 
           # - 06/25/2015 06:00PM as the date, "The road is slick and sloppy from the rain early this afternoon" as the road condition,
         #   "Muggy, warm, and sunny" as the weather, "Very crowded! Lots of pedestrians and bikes!" as the crowds,
