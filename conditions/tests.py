@@ -157,7 +157,7 @@ class NewConditionReportTest(TestCase):
         correct_report_list = ReportList.objects.create()
 
         self.client.post(
-            '/condition-reports/%s/add-report' % (correct_report_list.id,),
+            '/condition-reports/%d/add-reports' % (correct_report_list.id,),
             data={'new_date_time': '01/01/2000 3:00PM',
                   'new_road_condition': 'Not bad',
                   'new_weather_report': 'Super',
@@ -175,7 +175,7 @@ class NewConditionReportTest(TestCase):
         correct_report_list = ReportList.objects.create()
 
         response = self.client.post(
-            '/condition-reports/%s/add-report' % (correct_report_list.id,),
+            '/condition-reports/%s/add-reports' % (correct_report_list.id,),
             data={'new_date_time': '01/01/2000 3:00PM',
                   'new_road_condition': 'Not bad',
                   'new_weather_report': 'Super',
