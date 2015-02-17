@@ -7,7 +7,7 @@
 <body>
 <h1>Prospect Park Conditions</h1>
 
-<form method="POST" action="/condition-reports/new">
+<form method="POST" action="/condition-reports/{{ report_list.id }}/add-reports">
     <input name="new_date_time" id="id_new_date_time" placeholder="Enter the date and time of the report"/>
     <input name="new_road_condition" id="id_new_road_condition" placeholder="Enter a road condition for the report"/>
     <input name="new_weather_report" id="id_new_weather_report" placeholder="Enter the weather with the report"/>
@@ -19,7 +19,7 @@
     {% csrf_token %}
 </form>
 <table id="id_condition_report_table">
-    {% for report in reports %}
+    {% for report in report_list.conditionreport_set.all %}
         <tr><td>{{ report.date_time }}</td></tr>
         <tr><td>{{ report.road_condition }}</td></tr>
         <tr><td>{{ report.weather_report }}</td></tr>
