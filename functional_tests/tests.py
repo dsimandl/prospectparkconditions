@@ -145,5 +145,26 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Satisfied, they both go back to sleep
 
+    def test_layout_and_styling(self):
+        # Molly goes to the homepage
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        date_time_input = self.browser.find_element_by_id('id_new_date_time')
+        road_condition_input = self.browser.find_element_by_id('id_new_road_condition')
+        weather_input = self.browser.find_element_by_id('id_new_weather_report')
+        crowds_input = self.browser.find_element_by_id('id_new_crowds_report')
+        notes_input = self.browser.find_element_by_id('id_new_report_notes')
+
+        self.assertAlmostEqual(date_time_input.location['x'] + date_time_input.size['width'] / 2, 512, delta=5)
+        self.assertAlmostEqual(road_condition_input.location['x'] + road_condition_input.size['width'] / 2, 512, delta=5)
+        self.assertAlmostEqual(weather_input.location['x'] + weather_input.size['width'] / 2, 512, delta=5)
+        self.assertAlmostEqual(crowds_input.location['x'] + crowds_input.size['width'] / 2, 512, delta=5)
+        self.assertAlmostEqual(notes_input.location['x'] + notes_input.size['width'] / 2, 512, delta=5)
+
+
+
+
+
 
 
