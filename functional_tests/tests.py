@@ -59,7 +59,7 @@ class NewVisitorTest(LiveServerTestCase):
         # - 02/12/2015 12:00PM as the date, "Mostly Dry, some ice on the access roads" as the road condition,
 
         sally_report_url = self.browser.current_url
-        self.assertRegex(sally_report_url, '/conditionreports/.+')
+        self.assertRegex(sally_report_url, '/condition-reports/.+')
 
         #   "Cold, cloudy with some flurries" as the weather, "Not crowded, only a handful of other runners.  No bikes today",
         #   "The park overall is in good shape for a run!  The snow makes it look great!"
@@ -135,7 +135,7 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Brian gets his own unique URL
         brian_report_url = self.browser.current_url
-        self.assertRegex(brian_report_url, '/conditionreports/.+')
+        self.assertRegex(brian_report_url, '/condition-reports/.+')
         self.assertNotEqual(brian_report_url, sally_report_url)
 
         # Again, there is no trace of Sally's report

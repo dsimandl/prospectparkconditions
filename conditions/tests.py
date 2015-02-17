@@ -18,40 +18,6 @@ class HomePageTest(TestCase):
         expected_html = render_to_string('home.html')
         self.assertEqual(response.content.decode(), expected_html)
 
-    def test_home_page_can_save_a_POST_request(self):
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['new_date_time'] = '01/01/2014 3:00PM'
-        request.POST['new_road_condition'] = 'Great'
-        request.POST['new_weather_report'] = 'Awesome'
-        request.POST['new_crowds_report'] = 'Terrible'
-        request.POST['new_report_notes'] = 'Blah Blah'
-
-        response = home_page(request)
-
-        self.assertEqual(ConditionReport.objects.count(), 1)
-        new_object = ConditionReport.objects.first()
-        self.assertEqual(new_object.date_time, '01/01/2014 3:00PM')
-        self.assertEqual(new_object.road_condition, 'Great')
-        self.assertEqual(new_object.weather_report, 'Awesome')
-        self.assertEqual(new_object.crowds_report, 'Terrible')
-        self.assertEqual(new_object.report_notes, 'Blah Blah')
-
-    def test_home_page_redirects_after_POST(self):
-
-        request = HttpRequest()
-        request.method = 'POST'
-        request.POST['new_date_time'] = '01/01/2014 3:00PM'
-        request.POST['new_road_condition'] = 'Great'
-        request.POST['new_weather_report'] = 'Awesome'
-        request.POST['new_crowds_report'] = 'Terrible'
-        request.POST['new_report_notes'] = 'Blah Blah'
-
-        response = home_page(request)
-
-        self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/conditionreports/the-only-report-in-the-world/')
-
 class ConditionReportModelTest(TestCase):
 
     def test_saving_and_retrieving_reports(self):
@@ -89,16 +55,11 @@ class ConditionReportModelTest(TestCase):
         self.assertEqual(second_saved_report.crowds_report, 'Great')
         self.assertEqual(second_saved_report.report_notes, 'Empty!')
 
-    def test_home_page_only_saves_reports_when_necessary(self):
-        request = HttpRequest()
-        home_page(request)
-        self.assertEqual(ConditionReport.objects.count(), 0)
-
 class ConditionReportViewTest(TestCase):
 
     def test_uses_conditionreport_template(self):
-        response = self.client.get('/conditionreports/the-only-report-in-the-world/')
-        self.assertTemplateUsed(response, 'conditionreport.html')
+        response = self.client.get('/condition-reports/the-only-report-in-the-world/')
+        self.assertTemplateUsed(response, 'condition_report.html')
 
     def test_displays_all_items(self):
         ConditionReport.objects.create(date_time='01/01/2014 3:00PM',
@@ -113,7 +74,39 @@ class ConditionReportViewTest(TestCase):
                                        crowds_report='Noone',
                                        report_notes='HeHe')
 
-        response = self.client.get('/conditionreports/the-only-report-in-the-world/')
+        response = self.client.get('/condition-reports/the-only-report-in-the-world/')
 
         self.assertContains(response, '01/01/2014 3:00PM')
         self.assertContains(response, '01/02/2014 3:00PM')
+
+class NewConditionReportTest(TestCase):
+
+    def test_saving_a_POST_request(self):
+        self.client.post(
+            '/condition-reports/new',
+            data={'new_date_time': '01/01/2014 3:00PM',
+                  'new_road_condition': 'Great',
+                  'new_weather_report': 'Awesome',
+                  'new_crowds_report': 'Terrible',
+                  'new_report_notes' : 'Blah Blah'}
+        )
+
+        self.assertEqual(ConditionReport.objects.count(), 1)
+        new_object = ConditionReport.objects.first()
+        self.assertEqual(new_object.date_time, '01/01/2014 3:00PM')
+        self.assertEqual(new_object.road_condition, 'Great')
+        self.assertEqual(new_object.weather_report, 'Awesome')
+        self.assertEqual(new_object.crowds_report, 'Terrible')
+        self.assertEqual(new_object.report_notes, 'Blah Blah')
+
+    def test_redirects_after_POST(self):
+        response = self.client.post(
+            '/condition-reports/new',
+            data={'new_date_time': '01/01/2014 3:00PM',
+                  'new_road_condition': 'Great',
+                  'new_weather_report': 'Awesome',
+                  'new_crowds_report': 'Terrible',
+                  'new_report_notes' : 'Blah Blah'}
+        )
+
+        self.assertRedirects(response, '/condition-reports/the-only-report-in-the-world/')
