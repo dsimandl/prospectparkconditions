@@ -32,7 +32,7 @@ class NewVisitorTest(LiveServerTestCase):
         # She notices the page title and header mention prospect park conditions
         self.assertIn('Prospect Park', self.browser.title)
         header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('Prospect Park', header_text)
+        self.assertIn('new condition', header_text)
 
         # She is invited to enter a condition report right away
 
@@ -57,6 +57,9 @@ class NewVisitorTest(LiveServerTestCase):
         # When she hits enter, the page updates, and now the page lists
         submit_button.send_keys(Keys.ENTER)
         # - 02/12/2015 12:00PM as the date, "Mostly Dry, some ice on the access roads" as the road condition,
+
+        sally_report_url = self.browser.current_url
+        self.assertRegex(sally_report_url, '/conditionreports/.+')
 
         #   "Cold, cloudy with some flurries" as the weather, "Not crowded, only a handful of other runners.  No bikes today",
         #   "The park overall is in good shape for a run!  The snow makes it look great!"
@@ -102,7 +105,45 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_list_table('Very crowded! Lots of pedestrians and bikes!')
         self.check_for_row_in_list_table('Be aware there is a celebrate brooklyn show tonight! The park drives are full of pedestrians and bikes, especially by the bandshell')
 
-          # - 06/25/2015 06:00PM as the date, "The road is slick and sloppy from the rain early this afternoon" as the road condition,
-        #   "Muggy, warm, and sunny" as the weather, "Very crowded! Lots of pedestrians and bikes!" as the crowds,
-        #   "Be aware there is a celebrate brooklyn show tonight!
-        #   The park drives are full of pedestrians and bikes, especially by the bandshell"
+        # Now a new user, Brian comes along to the site
+        ## We use a new browser session to make sure that no information of Sally's is coming through from cookies, etc
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Brian visits the home page, there is no sign of Sally's visit
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Mostly Dry, some ice on the access roads', page_text)
+        self.assertNotIn('The road is slick and sloppy from the rain early this afternoon', page_text)
+
+        # Brian starts a new condition report
+
+        date_time_input = self.get_intput_box_and_send_keys('id_new_date_time', 'Enter the date and time of the report')
+        road_condition_input = self.get_intput_box_and_send_keys('id_new_road_condition', 'Enter a road condition for the report')
+        weather_input = self.get_intput_box_and_send_keys('id_new_weather_report', 'Enter the weather with the report')
+        crowds_input = self.get_intput_box_and_send_keys('id_new_crowds_report', 'Enter the crowd condition with the report')
+        notes_input = self.get_intput_box_and_send_keys('id_new_report_notes', 'Enter any notes with the report')
+        submit_button = self.browser.find_element_by_id('id_submit_button')
+
+        # He is not as interesting a Sally
+        self.send_keys(date_time_input, '01/01/2002 12:00PM')
+        self.send_keys(road_condition_input, 'It was Dry')
+        self.send_keys(weather_input, 'It was cold')
+        self.send_keys(crowds_input, 'No crowds')
+        self.send_keys(notes_input, 'The park is in ok shape')
+        submit_button.send_keys(Keys.ENTER)
+
+        # Brian gets his own unique URL
+        brian_report_url = self.browser.current_url
+        self.assertRegex(brian_report_url, '/conditionreports/.+')
+        self.assertNotEqual(brian_report_url, sally_report_url)
+
+        # Again, there is no trace of Sally's report
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Mostly Dry, some ice on the access roads', page_text)
+        self.assertIn('It was Dry', page_text)
+
+        # Satisfied, they both go back to sleep
+
+
+

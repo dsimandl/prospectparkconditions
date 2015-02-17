@@ -8,9 +8,11 @@ def home_page(request):
                                        weather_report=request.POST['new_weather_report'],
                                        crowds_report=request.POST['new_crowds_report'],
                                        report_notes=request.POST['new_report_notes'])
-        return redirect('/')
+        return redirect('/conditionreports/the-only-report-in-the-world/')
 
+    return render(request, 'home.html')
+
+def view_conditionreport(request):
     reports = ConditionReport.objects.all()
-    return render(request, 'home.html', {'reports': reports})
-
+    return render(request, 'conditionreport.html', {'reports': reports})
 

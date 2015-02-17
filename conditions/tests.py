@@ -50,26 +50,7 @@ class HomePageTest(TestCase):
         response = home_page(request)
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['location'], '/')
-
-    def test_home_page_displays_all_list_items(self):
-        ConditionReport.objects.create(date_time='01/01/2014 3:00PM',
-                                       road_condition='Great',
-                                       weather_report='Awesome',
-                                       crowds_report='Terrible',
-                                       report_notes='Blah Blah')
-
-        ConditionReport.objects.create(date_time='01/02/2014 3:00PM',
-                                       road_condition='Ok',
-                                       weather_report='Cold!',
-                                       crowds_report='Noone',
-                                       report_notes='HeHe')
-
-        request = HttpRequest()
-        response = home_page(request)
-
-        self.assertIn('01/01/2014 3:00PM', response.content.decode())
-        self.assertIn('01/02/2014 3:00PM', response.content.decode())
+        self.assertEqual(response['location'], '/conditionreports/the-only-report-in-the-world/')
 
 class ConditionReportModelTest(TestCase):
 
@@ -112,3 +93,27 @@ class ConditionReportModelTest(TestCase):
         request = HttpRequest()
         home_page(request)
         self.assertEqual(ConditionReport.objects.count(), 0)
+
+class ConditionReportViewTest(TestCase):
+
+    def test_uses_conditionreport_template(self):
+        response = self.client.get('/conditionreports/the-only-report-in-the-world/')
+        self.assertTemplateUsed(response, 'conditionreport.html')
+
+    def test_displays_all_items(self):
+        ConditionReport.objects.create(date_time='01/01/2014 3:00PM',
+                                       road_condition='Great',
+                                       weather_report='Awesome',
+                                       crowds_report='Terrible',
+                                       report_notes='Blah Blah')
+
+        ConditionReport.objects.create(date_time='01/02/2014 3:00PM',
+                                       road_condition='Ok',
+                                       weather_report='Cold!',
+                                       crowds_report='Noone',
+                                       report_notes='HeHe')
+
+        response = self.client.get('/conditionreports/the-only-report-in-the-world/')
+
+        self.assertContains(response, '01/01/2014 3:00PM')
+        self.assertContains(response, '01/02/2014 3:00PM')
