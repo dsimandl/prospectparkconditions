@@ -1,24 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head lang="en">
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/static/base.css" rel="stylesheet" media="screen">
     <title>Prospect Park Conditions</title>
 </head>
 <body>
-<h1>{% block header_text %}{% endblock %}</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 jumbotron">
+            <div class="text-center">
+                <h1>{% block header_text %}{% endblock %}</h1>
 
-<form method="POST" action="{% block form_action %}{% endblock %}">
-    <input name="new_date_time" id="id_new_date_time" placeholder="Enter the date and time of the report"/>
-    <input name="new_road_condition" id="id_new_road_condition" placeholder="Enter a road condition for the report"/>
-    <input name="new_weather_report" id="id_new_weather_report" placeholder="Enter the weather with the report"/>
-    <input name="new_crowds_report" id="id_new_crowds_report" placeholder="Enter the crowd condition with the report"/>
-    <input name="new_report_notes" id="id_new_report_notes" placeholder="Enter any notes with the report"/>
+                <form method="POST" action="{% block form_action %}{% endblock %}">
+                    <input name="new_date_time" id="id_new_date_time" class="form-control input-lg main-input"
+                           placeholder="Enter the date and time of the report"/>
+                    <input name="new_road_condition" id="id_new_road_condition" class="form-control input-lg main-input"
+                           placeholder="Enter a road condition for the report"/>
+                    <input name="new_weather_report" id="id_new_weather_report" class="form-control input-lg main-input"
+                           placeholder="Enter the weather with the report"/>
+                    <input name="new_crowds_report" id="id_new_crowds_report" class="form-control input-lg main-input"
+                           placeholder="Enter the crowd condition with the report"/>
+                    <input name="new_report_notes" id="id_new_report_notes" class="form-control input-lg main-input"
+                           placeholder="Enter any notes with the report"/>
 
-    <input id="id_submit_button" type="submit" value="Submit" />
+                    <input id="id_submit_button" class="main-input" type="submit" value="Submit"/>
 
-    {% csrf_token %}
-</form>
-    {% block table %}
-    {% endblock %}
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            {% block table %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
 </body>
 </html>

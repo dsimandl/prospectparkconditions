@@ -2,10 +2,10 @@
 
 {% block header_text %}Your park conditions reports{% endblock %}
 
-{% block form_action %}/condition-reports/{{ report_list.id }}{% endblock %}
+{% block form_action %}/condition-reports/{{ report_list.id }}/add-reports{% endblock %}
 
 {% block table%}
-    <table id="id_condition_report_table">
+    <table id="id_condition_report_table" class="table">
     {% for report in report_list.conditionreport_set.all %}
         <tr><td>{{ report.date_time }}</td></tr>
         <tr><td>{{ report.road_condition }}</td></tr>
