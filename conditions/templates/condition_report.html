@@ -1,24 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title>Prospect Park Conditions</title>
-</head>
-<body>
-<h1>Prospect Park Conditions</h1>
+{% extends 'base.html' %}
 
-<form method="POST" action="/condition-reports/{{ report_list.id }}/add-reports">
-    <input name="new_date_time" id="id_new_date_time" placeholder="Enter the date and time of the report"/>
-    <input name="new_road_condition" id="id_new_road_condition" placeholder="Enter a road condition for the report"/>
-    <input name="new_weather_report" id="id_new_weather_report" placeholder="Enter the weather with the report"/>
-    <input name="new_crowds_report" id="id_new_crowds_report" placeholder="Enter the crowd condition with the report"/>
-    <input name="new_report_notes" id="id_new_report_notes" placeholder="Enter any notes with the report"/>
+{% block header_text %}Your park conditions reports{% endblock %}
 
-    <input id="id_submit_button" type="submit" value="Submit" />
+{% block form_action %}/condition-reports/{{ report_list.id }}{% endblock %}
 
-    {% csrf_token %}
-</form>
-<table id="id_condition_report_table">
+{% block table%}
+    <table id="id_condition_report_table">
     {% for report in report_list.conditionreport_set.all %}
         <tr><td>{{ report.date_time }}</td></tr>
         <tr><td>{{ report.road_condition }}</td></tr>
@@ -28,5 +15,4 @@
         <tr><td>----------------------------------------------------</td></tr>
     {% endfor %}
 </table>
-</body>
-</html>
+{% endblock %}
